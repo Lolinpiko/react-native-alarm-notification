@@ -101,7 +101,9 @@ class AlarmUtil {
     boolean checkAlarm(ArrayList<AlarmModel> alarms, AlarmModel alarm) {
         boolean contain = false;
         for (AlarmModel aAlarm : alarms) {
-            if (aAlarm.getHour() == alarm.getHour() && aAlarm.getMinute() == alarm.getMinute() && aAlarm.getDay() == alarm.getDay() && aAlarm.getMonth() == alarm.getMonth() && aAlarm.getYear() == alarm.getYear()) {
+            if (aAlarm.getHour() == alarm.getHour() && aAlarm.getMinute() == alarm.getMinute()
+                    && aAlarm.getDay() == alarm.getDay() && aAlarm.getMonth() == alarm.getMonth()
+                    && aAlarm.getYear() == alarm.getYear()) {
                 contain = true;
                 break;
             }
@@ -132,7 +134,7 @@ class AlarmUtil {
         calendar.set(Calendar.MINUTE, alarm.getMinute());
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.DAY_OF_MONTH, alarm.getDay());
-        calendar.set(Calendar.MONTH, alarm.getMonth() - 1);
+        calendar.set(Calendar.MONTH, alarm.getMonth());
         calendar.set(Calendar.YEAR, alarm.getYear());
 
         Log.e(TAG, alarm.getAlarmId() + " - " + calendar.getTime().toString());
@@ -150,14 +152,16 @@ class AlarmUtil {
 
         if (scheduleType.equals("once")) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                        alarmIntent);
             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
             } else {
                 alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
             }
         } else if (scheduleType.equals("repeat")) {
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarm.getInterval() * 1000, alarmIntent);
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarm.getInterval() * 1000,
+                    alarmIntent);
         } else {
             Log.d(TAG, "Schedule type should either be once or repeat");
             return;
@@ -172,7 +176,7 @@ class AlarmUtil {
         calendar.set(Calendar.MINUTE, alarm.getMinute());
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.DAY_OF_MONTH, alarm.getDay());
-        calendar.set(Calendar.MONTH, alarm.getMonth() - 1);
+        calendar.set(Calendar.MONTH, alarm.getMonth());
         calendar.set(Calendar.YEAR, alarm.getYear());
 
         // set snooze interval
@@ -181,7 +185,7 @@ class AlarmUtil {
         alarm.setMinute(calendar.get(Calendar.MINUTE));
         alarm.setHour(calendar.get(Calendar.HOUR_OF_DAY));
         alarm.setDay(calendar.get(Calendar.DAY_OF_MONTH));
-        alarm.setMonth(calendar.get(Calendar.MONTH) - 1);
+        alarm.setMonth(calendar.get(Calendar.MONTH));
         alarm.setYear(calendar.get(Calendar.YEAR));
 
         alarm.setAlarmId((int) System.currentTimeMillis());
@@ -203,14 +207,16 @@ class AlarmUtil {
 
         if (scheduleType.equals("once")) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                        alarmIntent);
             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
             } else {
                 alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
             }
         } else if (scheduleType.equals("repeat")) {
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarm.getInterval() * 1000, alarmIntent);
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarm.getInterval() * 1000,
+                    alarmIntent);
         } else {
             Log.d(TAG, "Schedule type should either be once or repeat");
         }
@@ -234,7 +240,8 @@ class AlarmUtil {
         int alarmId = alarm.getAlarmId();
 
         Intent intent = new Intent(mContext, AlarmReceiver.class);
-        PendingIntent alarmIntent = PendingIntent.getBroadcast(mContext, alarmId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent alarmIntent = PendingIntent.getBroadcast(mContext, alarmId, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
         alarmManager.cancel(alarmIntent);
 
         this.setBootReceiver();
@@ -246,8 +253,7 @@ class AlarmUtil {
 
         int setting = pm.getComponentEnabledSetting(receiver);
         if (setting == PackageManager.COMPONENT_ENABLED_STATE_DISABLED) {
-            pm.setComponentEnabledSetting(receiver,
-                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+            pm.setComponentEnabledSetting(receiver, PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
                     PackageManager.DONT_KILL_APP);
         }
     }
@@ -256,8 +262,7 @@ class AlarmUtil {
         ComponentName receiver = new ComponentName(context, AlarmBootReceiver.class);
         PackageManager pm = context.getPackageManager();
 
-        pm.setComponentEnabledSetting(receiver,
-                PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+        pm.setComponentEnabledSetting(receiver, PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
                 PackageManager.DONT_KILL_APP);
     }
 
@@ -307,7 +312,7 @@ class AlarmUtil {
             Resources res = mContext.getResources();
             String packageName = mContext.getPackageName();
 
-            //icon
+            // icon
             int smallIconResId;
             String smallIcon = alarm.getSmallIcon();
             if (smallIcon != null && !smallIcon.equals("")) {
@@ -321,41 +326,36 @@ class AlarmUtil {
 
             Bundle bundle = new Bundle();
             if (alarm.getData() != null && !alarm.getData().equals("")) {
-                String [] datum = alarm.getData().split(";;");
+                String[] datum = alarm.getData().split(";;");
                 for (String item : datum) {
-                    String [] data = item.split("==>");
+                    String[] data = item.split("==>");
                     bundle.putString(data[0], data[1]);
                 }
 
                 intent.putExtras(bundle);
             }
 
-            PendingIntent pendingIntent = PendingIntent.getActivity(mContext, notificationID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent pendingIntent = PendingIntent.getActivity(mContext, notificationID, intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
 
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mContext, channelID)
-                    .setSmallIcon(smallIconResId)
-                    .setContentTitle(title)
-                    .setContentText(message)
-                    .setTicker(alarm.getTicker())
-                    .setDefaults(NotificationCompat.DEFAULT_ALL)
-                    .setPriority(NotificationCompat.PRIORITY_MAX)
-                    .setAutoCancel(alarm.isAutoCancel())
-                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                    .setCategory(NotificationCompat.CATEGORY_ALARM)
-                    .setSound(null)
-                    .setVibrate(null)
-                    .setDeleteIntent(createOnDismissedIntent(mContext, notificationID));
+                    .setSmallIcon(smallIconResId).setContentTitle(title).setContentText(message)
+                    .setTicker(alarm.getTicker()).setDefaults(NotificationCompat.DEFAULT_ALL)
+                    .setPriority(NotificationCompat.PRIORITY_MAX).setAutoCancel(alarm.isAutoCancel())
+                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC).setCategory(NotificationCompat.CATEGORY_ALARM)
+                    .setSound(null).setVibrate(null).setDeleteIntent(createOnDismissedIntent(mContext, notificationID));
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 String color = alarm.getColor();
 
-                NotificationChannel mChannel = new NotificationChannel(channelID, "alarmnotif", NotificationManager.IMPORTANCE_HIGH);
+                NotificationChannel mChannel = new NotificationChannel(channelID, "alarmnotif",
+                        NotificationManager.IMPORTANCE_HIGH);
                 mChannel.enableLights(true);
                 mChannel.enableVibration(alarm.isVibrate());
                 if (color != null && !color.equals("")) {
                     mChannel.setLightColor(Color.parseColor(color));
                 }
-                mChannel.setVibrationPattern(new long[]{1000, 2000});
+                mChannel.setVibrationPattern(new long[] { 1000, 2000 });
                 mNotificationManager.createNotificationChannel(mChannel);
                 mBuilder.setChannelId(channelID);
             }
@@ -365,25 +365,30 @@ class AlarmUtil {
             Intent dismissIntent = new Intent(mContext, AlarmReceiver.class);
             dismissIntent.setAction(NOTIFICATION_ACTION_DISMISS);
             dismissIntent.putExtra("AlarmId", alarm.getId());
-            PendingIntent pendingDismiss = PendingIntent.getBroadcast(mContext, notificationID, dismissIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-            NotificationCompat.Action dismissAction = new NotificationCompat.Action(android.R.drawable.ic_lock_idle_alarm, "DISMISS", pendingDismiss);
+            PendingIntent pendingDismiss = PendingIntent.getBroadcast(mContext, notificationID, dismissIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
+            NotificationCompat.Action dismissAction = new NotificationCompat.Action(
+                    android.R.drawable.ic_lock_idle_alarm, "DISMISS", pendingDismiss);
             mBuilder.addAction(dismissAction);
 
             Intent snoozeIntent = new Intent(mContext, AlarmReceiver.class);
             snoozeIntent.setAction(NOTIFICATION_ACTION_SNOOZE);
             snoozeIntent.putExtra("SnoozeAlarmId", alarm.getId());
-            PendingIntent pendingSnooze = PendingIntent.getBroadcast(mContext, notificationID, snoozeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-            NotificationCompat.Action snoozeAction = new NotificationCompat.Action(R.drawable.ic_snooze, "SNOOZE", pendingSnooze);
+            PendingIntent pendingSnooze = PendingIntent.getBroadcast(mContext, notificationID, snoozeIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
+            NotificationCompat.Action snoozeAction = new NotificationCompat.Action(R.drawable.ic_snooze, "SNOOZE",
+                    pendingSnooze);
             mBuilder.addAction(snoozeAction);
 
-            //use big text
-            if(alarm.isUseBigText()){
+            // use big text
+            if (alarm.isUseBigText()) {
                 mBuilder = mBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
             }
 
-            //large icon
+            // large icon
             String largeIcon = alarm.getLargeIcon();
-            if (largeIcon != null && !largeIcon.equals("") && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            if (largeIcon != null && !largeIcon.equals("")
+                    && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                 int largeIconResId = res.getIdentifier(largeIcon, "mipmap", packageName);
                 Bitmap largeIconBitmap = BitmapFactory.decodeResource(res, largeIconResId);
                 if (largeIconResId != 0) {
@@ -391,7 +396,7 @@ class AlarmUtil {
                 }
             }
 
-            //color
+            // color
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 String color = alarm.getColor();
                 if (color != null && !color.equals("")) {
@@ -399,7 +404,7 @@ class AlarmUtil {
                 }
             }
 
-            //vibrate
+            // vibrate
             boolean vibrate = alarm.isVibrate();
             if (vibrate) {
                 long vibration = (long) alarm.getVibration();

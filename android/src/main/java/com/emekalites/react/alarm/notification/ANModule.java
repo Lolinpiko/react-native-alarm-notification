@@ -81,7 +81,7 @@ public class ANModule extends ReactContextBaseJavaModule {
 
         try {
             int alarmId = Integer.parseInt(bundle.getString("alarm_id"));
-            if (alarmId <= 0) {
+            if (alarmId == 0) {
                 alarmId = (int) System.currentTimeMillis();
             }
             alarm.setAlarmId(alarmId);
@@ -102,7 +102,7 @@ public class ANModule extends ReactContextBaseJavaModule {
         alarm.setMinute(calendar.get(Calendar.MINUTE));
         alarm.setHour(calendar.get(Calendar.HOUR_OF_DAY));
         alarm.setDay(calendar.get(Calendar.DAY_OF_MONTH));
-        alarm.setMonth(calendar.get(Calendar.MONTH) - 1);
+        alarm.setMonth(calendar.get(Calendar.MONTH));
         alarm.setYear(calendar.get(Calendar.YEAR));
 
         boolean containAlarm = alarmUtil.checkAlarm(getAlarmDB().getAlarmList(1), alarm);
@@ -158,16 +158,8 @@ public class ANModule extends ReactContextBaseJavaModule {
         alarm.setVibrate(bundle.getBoolean("loop_sound", true));
         alarm.setVibration(bundle.getInt("vibration", 100));
         alarm.setUseBigText(bundle.getBoolean("use_big_text", false));
-        
-        String datetime = bundle.getString("fire_date");
-        if (datetime == null || datetime.equals("")) {
-            Log.e(TAG, "failed to schedule notification because fire date is missing");
-            return;
-        }
 
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.ENGLISH);
-        Calendar calendar = new GregorianCalendar();
-        calendar.setTime(sdf.parse(datetime));
+        Calendar calendar = GregorianCalendar.getInstance();
 
         alarm.setMinute(calendar.get(Calendar.MINUTE));
         alarm.setHour(calendar.get(Calendar.HOUR_OF_DAY));
@@ -177,7 +169,7 @@ public class ANModule extends ReactContextBaseJavaModule {
 
         try {
             int alarmId = Integer.parseInt(bundle.getString("alarm_id"));
-            if (alarmId <= 0) {
+            if (alarmId == 0) {
                 alarmId = (int) System.currentTimeMillis();
             }
             alarm.setAlarmId(alarmId);
