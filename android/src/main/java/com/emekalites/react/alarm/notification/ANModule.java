@@ -69,7 +69,7 @@ public class ANModule extends ReactContextBaseJavaModule {
         alarm.setPlaySound(bundle.getBoolean("play_sound", true));
         alarm.setScheduleType(bundle.getString("schedule_type", "once"));
         alarm.setSmallIcon(bundle.getString("small_icon", "ic_launcher"));
-        alarm.setSnoozeInterval(bundle.getInt("snooze_interval", 1));
+        alarm.setSnoozeInterval((int) bundle.getDouble("snooze_interval", 1));
         alarm.setSoundName(bundle.getString("sound_name", null));
         alarm.setSoundNames(bundle.getString("sound_names", null));
         alarm.setTag(bundle.getString("tag", ""));
@@ -103,7 +103,7 @@ public class ANModule extends ReactContextBaseJavaModule {
         alarm.setMinute(calendar.get(Calendar.MINUTE));
         alarm.setHour(calendar.get(Calendar.HOUR_OF_DAY));
         alarm.setDay(calendar.get(Calendar.DAY_OF_MONTH));
-        alarm.setMonth(calendar.get(Calendar.MONTH));
+        alarm.setMonth(calendar.get(Calendar.MONTH) + 1);
         alarm.setYear(calendar.get(Calendar.YEAR));
 
         boolean containAlarm = alarmUtil.checkAlarm(getAlarmDB().getAlarmList(1), alarm);

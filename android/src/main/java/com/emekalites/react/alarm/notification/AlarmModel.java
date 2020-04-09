@@ -25,17 +25,17 @@ public class AlarmModel implements Serializable {
     private String largeIcon;
     private boolean playSound = true;
     private String soundName;
-    private String soundNames;                 // separate sounds with comma eg (sound1.mp3,sound2.mp3)
+    private String soundNames; // separate sounds with comma eg (sound1.mp3,sound2.mp3)
     private String color = "red";
-    private String scheduleType = "once";      // once or repeat
-    private int interval = 1;                       // in minutes
-    private int snoozeInterval = 1;                       // in minutes
+    private String scheduleType = "once"; // once or repeat
+    private int interval = 1; // in minutes
+    private int snoozeInterval = 1; // in minutes
     private String tag;
     private String data;
     private boolean loopSound = false;
     private boolean useBigText = false;
 
-    private int active = 1;         // 1 = yes, 0 = no
+    private int active = 1; // 1 = yes, 0 = no
 
     public int getId() {
         return id;
@@ -271,36 +271,14 @@ public class AlarmModel implements Serializable {
 
     @Override
     public String toString() {
-        return "AlarmModel{" +
-                "id=" + id +
-                ", second=" + second +
-                ", minute=" + minute +
-                ", hour=" + hour +
-                ", day=" + day +
-                ", month=" + month +
-                ", year=" + year +
-                ", alarmId=" + alarmId +
-                ", title='" + title + '\'' +
-                ", message='" + message + '\'' +
-                ", channel='" + channel + '\'' +
-                ", ticker='" + ticker + '\'' +
-                ", autoCancel=" + autoCancel +
-                ", vibrate=" + vibrate +
-                ", vibration=" + vibration +
-                ", smallIcon='" + smallIcon + '\'' +
-                ", largeIcon='" + largeIcon + '\'' +
-                ", playSound=" + playSound +
-                ", soundName='" + soundName + '\'' +
-                ", soundNames='" + soundNames + '\'' +
-                ", color='" + color + '\'' +
-                ", scheduleType='" + scheduleType + '\'' +
-                ", interval=" + interval +
-                ", snoozeInterval=" + snoozeInterval +
-                ", tag='" + tag + '\'' +
-                ", data='" + data + '\'' +
-                ", loopSound=" + loopSound +
-                ", useBigText=" + useBigText +
-                ", active=" + active +
-                '}';
+        return "AlarmModel{" + "id=" + id + ", second=" + second + ", minute=" + minute + ", hour=" + hour + ", day="
+                + day + ", month=" + month + ", year=" + year + ", alarmId=" + alarmId + ", title='" + title + '\''
+                + ", message='" + message + '\'' + ", channel='" + channel + '\'' + ", ticker='" + ticker + '\''
+                + ", autoCancel=" + autoCancel + ", vibrate=" + vibrate + ", vibration=" + vibration + ", smallIcon='"
+                + smallIcon + '\'' + ", largeIcon='" + largeIcon + '\'' + ", playSound=" + playSound + ", soundName='"
+                + soundName + '\'' + ", soundNames='" + soundNames + '\'' + ", color='" + color + '\''
+                + ", scheduleType='" + scheduleType + '\'' + ", interval=" + interval + ", snoozeInterval="
+                + snoozeInterval + ", tag='" + tag + '\'' + ", data='" + data + '\'' + ", loopSound=" + loopSound
+                + ", useBigText=" + useBigText + ", active=" + active + '}';
     }
 }

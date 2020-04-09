@@ -49,8 +49,6 @@ class AlarmUtil {
     AlarmUtil(Application context) {
         mContext = context;
 
-        audioInterface = AudioInterface.getInstance();
-        audioInterface.init(mContext);
     }
 
     private Class getMainActivityClass() {
@@ -103,14 +101,14 @@ class AlarmUtil {
         for (AlarmModel aAlarm : alarms) {
             if (aAlarm.getHour() == alarm.getHour() && aAlarm.getMinute() == alarm.getMinute()
                     && aAlarm.getDay() == alarm.getDay() && aAlarm.getMonth() == alarm.getMonth()
-                    && aAlarm.getYear() == alarm.getYear()) {
+                    && aAlarm.getYear() == alarm.getYear() && aAlarm.getSecond() == alarm.getSecond()) {
                 contain = true;
                 break;
             }
         }
 
         if (contain) {
-            Toast.makeText(mContext, "You have already set this Alarm", Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "You have already set this Alarm");
         }
 
         return contain;
@@ -134,10 +132,8 @@ class AlarmUtil {
         calendar.set(Calendar.MINUTE, alarm.getMinute());
         calendar.set(Calendar.SECOND, alarm.getSecond());
         calendar.set(Calendar.DAY_OF_MONTH, alarm.getDay());
-        calendar.set(Calendar.MONTH, alarm.getMonth());
+        calendar.set(Calendar.MONTH, alarm.getMonth() - 1);
         calendar.set(Calendar.YEAR, alarm.getYear());
-
-        Log.e(TAG, alarm.getAlarmId() + " - " + calendar.getTime().toString());
 
         int alarmId = alarm.getAlarmId();
 
@@ -176,7 +172,7 @@ class AlarmUtil {
         calendar.set(Calendar.MINUTE, alarm.getMinute());
         calendar.set(Calendar.SECOND, alarm.getSecond());
         calendar.set(Calendar.DAY_OF_MONTH, alarm.getDay());
-        calendar.set(Calendar.MONTH, alarm.getMonth());
+        calendar.set(Calendar.MONTH, alarm.getMonth() - 1);
         calendar.set(Calendar.YEAR, alarm.getYear());
 
         // set snooze interval
@@ -186,7 +182,7 @@ class AlarmUtil {
         alarm.setMinute(calendar.get(Calendar.MINUTE));
         alarm.setHour(calendar.get(Calendar.HOUR_OF_DAY));
         alarm.setDay(calendar.get(Calendar.DAY_OF_MONTH));
-        alarm.setMonth(calendar.get(Calendar.MONTH));
+        alarm.setMonth(calendar.get(Calendar.MONTH) - 1);
         alarm.setYear(calendar.get(Calendar.YEAR));
 
         alarm.setAlarmId((int) System.currentTimeMillis());
@@ -282,9 +278,10 @@ class AlarmUtil {
             }
 
             boolean playSound = alarm.isPlaySound();
-            if (playSound) {
-                this.playAlarmSound(alarm.getSoundName(), alarm.getSoundNames(), alarm.isLoopSound());
-            }
+            // if (playSound) {
+            // this.playAlarmSound(alarm.getSoundName(), alarm.getSoundNames(),
+            // alarm.isLoopSound());
+            // }
 
             NotificationManager mNotificationManager = getNotificationManager();
             int notificationID = alarm.getAlarmId();
@@ -363,23 +360,26 @@ class AlarmUtil {
 
             mBuilder.setContentIntent(pendingIntent);
 
-            Intent dismissIntent = new Intent(mContext, AlarmReceiver.class);
-            dismissIntent.setAction(NOTIFICATION_ACTION_DISMISS);
-            dismissIntent.putExtra("AlarmId", alarm.getId());
-            PendingIntent pendingDismiss = PendingIntent.getBroadcast(mContext, notificationID, dismissIntent,
-                    PendingIntent.FLAG_UPDATE_CURRENT);
-            NotificationCompat.Action dismissAction = new NotificationCompat.Action(
-                    android.R.drawable.ic_lock_idle_alarm, "DISMISS", pendingDismiss);
-            mBuilder.addAction(dismissAction);
-
-            Intent snoozeIntent = new Intent(mContext, AlarmReceiver.class);
-            snoozeIntent.setAction(NOTIFICATION_ACTION_SNOOZE);
-            snoozeIntent.putExtra("SnoozeAlarmId", alarm.getId());
-            PendingIntent pendingSnooze = PendingIntent.getBroadcast(mContext, notificationID, snoozeIntent,
-                    PendingIntent.FLAG_UPDATE_CURRENT);
-            NotificationCompat.Action snoozeAction = new NotificationCompat.Action(R.drawable.ic_snooze, "SNOOZE",
-                    pendingSnooze);
-            mBuilder.addAction(snoozeAction);
+            // Intent dismissIntent = new Intent(mContext, AlarmReceiver.class);
+            // dismissIntent.setAction(NOTIFICATION_ACTION_DISMISS);
+            // dismissIntent.putExtra("AlarmId", alarm.getId());
+            // PendingIntent pendingDismiss = PendingIntent.getBroadcast(mContext,
+            // notificationID, dismissIntent,
+            // PendingIntent.FLAG_UPDATE_CURRENT);
+            // NotificationCompat.Action dismissAction = new NotificationCompat.Action(
+            // android.R.drawable.ic_lock_idle_alarm, "DISMISS", pendingDismiss);
+            // mBuilder.addAction(dismissAction);
+            //
+            // Intent snoozeIntent = new Intent(mContext, AlarmReceiver.class);
+            // snoozeIntent.setAction(NOTIFICATION_ACTION_SNOOZE);
+            // snoozeIntent.putExtra("SnoozeAlarmId", alarm.getId());
+            // PendingIntent pendingSnooze = PendingIntent.getBroadcast(mContext,
+            // notificationID, snoozeIntent,
+            // PendingIntent.FLAG_UPDATE_CURRENT);
+            // NotificationCompat.Action snoozeAction = new
+            // NotificationCompat.Action(R.drawable.ic_snooze, "SNOOZE",
+            // pendingSnooze);
+            // mBuilder.addAction(snoozeAction);
 
             // use big text
             if (alarm.isUseBigText()) {
@@ -441,7 +441,7 @@ class AlarmUtil {
 
     void stopAlarmSound() {
         Log.e(TAG, "stop alarm sound");
-        audioInterface.stopPlayer();
+        // audioInterface.stopPlayer();
     }
 
     ArrayList<AlarmModel> getAlarms() {

@@ -22,10 +22,8 @@ public class AlarmDatabase extends SQLiteOpenHelper {
     private static final String COL_DATA = "gson_data";
     private static final String COL_ACTIVE = "active";
 
-    private String CREATE_TABLE_ALARM = "CREATE TABLE " + TABLE_NAME + " ("
-            + COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + COL_DATA + " TEXT, "
-            + COL_ACTIVE + " INTEGER) ";
+    private String CREATE_TABLE_ALARM = "CREATE TABLE " + TABLE_NAME + " (" + COL_ID
+            + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COL_DATA + " TEXT, " + COL_ACTIVE + " INTEGER) ";
 
     AlarmDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -46,7 +44,7 @@ public class AlarmDatabase extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         AlarmModel alarm = null;
 
-        String selectQuery = "SELECT * FROM " +TABLE_NAME+ " WHERE " + COL_ID + "=" + _id;
+        String selectQuery = "SELECT * FROM " + TABLE_NAME + " WHERE " + COL_ID + "=" + _id;
 
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -56,8 +54,6 @@ public class AlarmDatabase extends SQLiteOpenHelper {
             int id = cursor.getInt(0);
             String data = cursor.getString(1);
             int active = cursor.getInt(2);
-
-            Log.e(TAG, "get alarm -> id:" + id + ", active:" + active + ", " + data);
 
             Gson gson = new Gson();
 
@@ -87,7 +83,6 @@ public class AlarmDatabase extends SQLiteOpenHelper {
             Gson gson = new Gson();
 
             String data = gson.toJson(alarm);
-            Log.e(TAG, "insert alarm: " + data);
 
             values.put(COL_DATA, data);
             values.put(COL_ACTIVE, alarm.getActive());
@@ -113,7 +108,6 @@ public class AlarmDatabase extends SQLiteOpenHelper {
             Gson gson = new Gson();
 
             String data = gson.toJson(alarm);
-            Log.e(TAG, "update alarm: " + data);
 
             values.put(COL_ID, alarm.getId());
             values.put(COL_DATA, data);
