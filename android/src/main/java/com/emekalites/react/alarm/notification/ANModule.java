@@ -99,6 +99,7 @@ public class ANModule extends ReactContextBaseJavaModule {
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(sdf.parse(datetime));
 
+        alarm.setSecond(calendar.get(Calendar.SECOND));
         alarm.setMinute(calendar.get(Calendar.MINUTE));
         alarm.setHour(calendar.get(Calendar.HOUR_OF_DAY));
         alarm.setDay(calendar.get(Calendar.DAY_OF_MONTH));
@@ -161,10 +162,11 @@ public class ANModule extends ReactContextBaseJavaModule {
 
         Calendar calendar = GregorianCalendar.getInstance();
 
+        alarm.setSecond(calendar.get(Calendar.SECOND));
         alarm.setMinute(calendar.get(Calendar.MINUTE));
         alarm.setHour(calendar.get(Calendar.HOUR_OF_DAY));
         alarm.setDay(calendar.get(Calendar.DAY_OF_MONTH));
-        alarm.setMonth(calendar.get(Calendar.MONTH) - 1);
+        alarm.setMonth(calendar.get(Calendar.MONTH) + 1);
         alarm.setYear(calendar.get(Calendar.YEAR));
 
         try {
