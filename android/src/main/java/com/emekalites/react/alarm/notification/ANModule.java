@@ -126,7 +126,7 @@ public class ANModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void stopAlarm() {
-        alarmUtil.stopAlarmSound();
+
     }
 
     @ReactMethod

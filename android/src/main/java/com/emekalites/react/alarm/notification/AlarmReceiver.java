@@ -67,7 +67,6 @@ public class AlarmReceiver extends BroadcastReceiver {
                             e.printStackTrace();
                         }
 
-                        alarmUtil.stopAlarmSound();
                         alarmUtil.removeFiredNotification(alarm.getAlarmId());
                         break;
 
@@ -83,9 +82,9 @@ public class AlarmReceiver extends BroadcastReceiver {
                         }
 
                         // emit notification dismissed
-                        ANModule.getReactAppContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit("OnNotificationDismissed", "{\"id\": \"" + alarm.getAlarmId() + "\"}");
+                        ANModule.getReactAppContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                                .emit("OnNotificationDismissed", "{\"id\": \"" + alarm.getAlarmId() + "\"}");
 
-                        alarmUtil.stopAlarmSound();
                         alarmUtil.removeFiredNotification(alarm.getAlarmId());
                         break;
                 }

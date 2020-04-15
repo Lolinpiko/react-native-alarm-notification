@@ -43,7 +43,6 @@ class AlarmUtil {
     private static final String TAG = AlarmUtil.class.getSimpleName();
 
     private Context mContext;
-    private AudioInterface audioInterface;
     private static final long DEFAULT_VIBRATION = 100;
 
     AlarmUtil(Application context) {
@@ -74,44 +73,6 @@ class AlarmUtil {
 
     private NotificationManager getNotificationManager() {
         return (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-    }
-
-    private void playAlarmSound(String name, String names, boolean shouldLoop) {
-        MediaPlayer mediaPlayer = audioInterface.getSingletonMedia(name, names);
-        mediaPlayer.setLooping(shouldLoop);
-        mediaPlayer.start();
-
-        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                try {
-                    mp.stop();
-                    mp.reset();
-                    mp.release();
-                    Log.e(TAG, "release media player");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
-    boolean checkAlarm(ArrayList<AlarmModel> alarms, AlarmModel alarm) {
-        boolean contain = false;
-        for (AlarmModel aAlarm : alarms) {
-            if (aAlarm.getHour() == alarm.getHour() && aAlarm.getMinute() == alarm.getMinute()
-                    && aAlarm.getDay() == alarm.getDay() && aAlarm.getMonth() == alarm.getMonth()
-                    && aAlarm.getYear() == alarm.getYear() && aAlarm.getSecond() == alarm.getSecond()) {
-                contain = true;
-                break;
-            }
-        }
-
-        if (contain) {
-            Log.d(TAG, "You have already set this Alarm");
-        }
-
-        return contain;
     }
 
     void setBootReceiver() {
@@ -437,11 +398,6 @@ class AlarmUtil {
 
     void removeAllFiredNotifications() {
         getNotificationManager().cancelAll();
-    }
-
-    void stopAlarmSound() {
-        Log.e(TAG, "stop alarm sound");
-        // audioInterface.stopPlayer();
     }
 
     ArrayList<AlarmModel> getAlarms() {
