@@ -106,8 +106,6 @@ public class ANModule extends ReactContextBaseJavaModule {
         alarm.setMonth(calendar.get(Calendar.MONTH) + 1);
         alarm.setYear(calendar.get(Calendar.YEAR));
 
-        boolean containAlarm = alarmUtil.checkAlarm(getAlarmDB().getAlarmList(1), alarm);
-        if (!containAlarm) {
             try {
                 int id = getAlarmDB().insert(alarm);
                 alarm.setId(id);
@@ -116,7 +114,6 @@ public class ANModule extends ReactContextBaseJavaModule {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
     }
 
     @ReactMethod
