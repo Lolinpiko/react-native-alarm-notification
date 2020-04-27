@@ -1,7 +1,7 @@
 {
   "name": "react-native-alarm-notification",
   "title": "React Native Alarm Notification",
-  "version": "1.4.5",
+  "version": "1.4.4",
   "description": "schedule alarm with notification in react-native",
   "main": "index.js",
   "scripts": {
@@ -9,8 +9,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/emekalites/react-native-alarm-notification.git",
-    "baseUrl": "https://github.com/emekalites/react-native-alarm-notification"
+    "url": "git+https://github.com/Lolinpiko/react-native-alarm-notification.git",
+    "baseUrl": "https://github.com/Lolinpiko/react-native-alarm-notification"
   },
   "keywords": [
     "react-native"
