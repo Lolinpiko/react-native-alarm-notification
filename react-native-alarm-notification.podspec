@@ -9,11 +9,11 @@ Pod::Spec.new do |s|
   s.description  = <<-DESC
                   react-native-alarm-notification
                    DESC
-  s.homepage     = "https://github.com/emekalites/react-native-alarm-notification"
+  s.homepage     = "https://github.com/Lolinpiko/react-native-alarm-notification"
   s.license      = package["version"]
   s.authors      = { "Chukwuemeka Ihedoro" => "caihedoro@gmail.com" }
   s.platforms    = { :ios => "9.0" }
-  s.source       = { :git => "https://github.com/emekalites/react-native-alarm-notification.git", :tag => "#{s.version}" }
+  s.source       = { :git => "https://github.com/Lolinpiko/react-native-alarm-notification.git", :tag => "#{s.version}" }
 
   s.source_files = "ios/**/*.{h,m,swift}"
   s.requires_arc = true
