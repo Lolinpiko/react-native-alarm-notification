@@ -11,21 +11,21 @@ import java.util.Collections;
 import java.util.List;
 
 public class ANPackage implements ReactPackage {
-    public ANPackage(){
-    }
+  public ANPackage(){
+  }
 
-    @Override
-    public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
-        return Arrays.<NativeModule>asList(new ANModule(reactContext));
-    }
+  @Override
+  public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
+    return Arrays.<NativeModule>asList(new ANModule(reactContext));
+  }
 
-    // Deprecated RN 0.47
-    public List<Class<? extends JavaScriptModule>> createJSModules() {
-        return Collections.emptyList();
-    }
+  // Deprecated RN 0.47
+  public List<Class<? extends JavaScriptModule>> createJSModules() {
+    return Collections.emptyList();
+  }
 
-    @Override
-    public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
-        return Collections.emptyList();
-    }
+  @Override
+  public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
+    return Collections.emptyList();
+  }
 }
