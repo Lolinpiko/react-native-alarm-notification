@@ -3,7 +3,6 @@ package com.emekalites.react.alarm.notification;
 import android.app.AlarmManager;
 import android.app.Application;
 import android.app.Notification;
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ComponentName;
@@ -12,15 +11,12 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.util.Log;
-import android.widget.Toast;
+import android.os.Environment;
+import java.io.FileOutputStream;
+import java.io.File;
 
 import androidx.core.app.NotificationCompat;
 
@@ -30,14 +26,91 @@ import com.facebook.react.bridge.WritableNativeMap;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.Iterator;
+import java.util.Calendar;
+import java.text.SimpleDateFormat;
+import java.util.TimeZone;
+import java.util.Date;
 
 import static com.emekalites.react.alarm.notification.Constants.ADD_INTENT;
-import static com.emekalites.react.alarm.notification.Constants.NOTIFICATION_ACTION_DISMISS;
-import static com.emekalites.react.alarm.notification.Constants.NOTIFICATION_ACTION_SNOOZE;
+
+class FileLogger {
+  private static String directory = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/Debug/";
+
+  private static String getTime() {
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy hh:mm:ss");
+    dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+    Date today = Calendar.getInstance().getTime();
+    return dateFormat.format(today);
+  }
+
+  // Log Debug
+  public static void d(Context context, String log) {
+    log = log + "\n";
+
+    String finalLog = "";
+    String[] splitLogs = log.split("\n");
+
+    for (String l : splitLogs) {
+      finalLog = finalLog + "\t" + l + "\n";
+    }
+
+    String message = "==== Debug " + getTime() + " ====\n" + finalLog + "==== End Debug " + getTime() + " ====\n";
+    writeToFile(message, context);
+  }
+
+  // Log Error
+  public static void e(Context context, String log) {
+    log = log + "\n";
+
+    String finalLog = "";
+    String[] splitLogs = log.split("\n");
+
+    for (String l : splitLogs) {
+      finalLog = finalLog + "\t" + l + "\n";
+    }
+
+    String message = "==== Error " + getTime() + " ====\n" + finalLog + "==== End Error " + getTime() + " ====\n";
+    writeToFile(message, context);
+  }
+
+  // Log Infos
+  public static void i(Context context, String log) {
+    log = log + "\n";
+
+    String finalLog = "";
+    String[] splitLogs = log.split("\n");
+
+    for (String l : splitLogs) {
+      finalLog = finalLog + "\t" + l + "\n";
+    }
+
+    String message = "==== Infos " + getTime() + " ====\n" + finalLog + "==== End Infos " + getTime() + " ====\n";
+    writeToFile(message, context);
+  }
+
+  private static void writeToFile(String data, Context context) {
+    File myDir = new File(directory);
+
+    if (!myDir.exists()) {
+      myDir.mkdirs();
+    }
+
+    File file = new File(myDir, "cleo-logs.txt");
+
+    try {
+      FileOutputStream out = new FileOutputStream(file);
+      out.write(data.getBytes());
+      out.flush();
+      out.close();
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+}
 
 class AlarmUtil {
   private static final String TAG = AlarmUtil.class.getSimpleName();
@@ -99,6 +172,8 @@ class AlarmUtil {
       alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarm.getAlarmFireTime(), alarmIntent);
     }
 
+    FileLogger.d(mContext, "SET ALARM\n" + alarm.toString());
+
     this.setBootReceiver();
   }
 
@@ -119,8 +194,10 @@ class AlarmUtil {
 
     Intent intent = new Intent(mContext, AlarmReceiver.class);
     PendingIntent alarmIntent = PendingIntent.getBroadcast(mContext, alarmId, intent,
-      PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent.FLAG_UPDATE_CURRENT);
     alarmManager.cancel(alarmIntent);
+
+    FileLogger.d(mContext, "CANCEL ALARM\n" + alarm.toString());
 
     this.setBootReceiver();
   }
@@ -132,7 +209,7 @@ class AlarmUtil {
     int setting = pm.getComponentEnabledSetting(receiver);
     if (setting == PackageManager.COMPONENT_ENABLED_STATE_DISABLED) {
       pm.setComponentEnabledSetting(receiver, PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-        PackageManager.DONT_KILL_APP);
+          PackageManager.DONT_KILL_APP);
     }
   }
 
@@ -141,7 +218,7 @@ class AlarmUtil {
     PackageManager pm = context.getPackageManager();
 
     pm.setComponentEnabledSetting(receiver, PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-      PackageManager.DONT_KILL_APP);
+        PackageManager.DONT_KILL_APP);
   }
 
   void sendNotification(AlarmModel alarm) {
@@ -203,14 +280,12 @@ class AlarmUtil {
       }
 
       PendingIntent pendingIntent = PendingIntent.getActivity(mContext, notificationID, intent,
-        PendingIntent.FLAG_UPDATE_CURRENT);
+          PendingIntent.FLAG_UPDATE_CURRENT);
 
       NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mContext, channelID)
-        .setSmallIcon(smallIconResId).setContentTitle(title).setContentText(message)
-        .setDefaults(NotificationCompat.DEFAULT_ALL)
-        .setPriority(NotificationCompat.PRIORITY_MAX)
-        .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-        .setCategory(NotificationCompat.CATEGORY_ALARM);
+          .setSmallIcon(smallIconResId).setContentTitle(title).setContentText(message)
+          .setDefaults(NotificationCompat.DEFAULT_ALL).setPriority(NotificationCompat.PRIORITY_MAX)
+          .setVisibility(NotificationCompat.VISIBILITY_PUBLIC).setCategory(NotificationCompat.CATEGORY_ALARM);
 
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         mBuilder.setChannelId(channelID);
@@ -222,6 +297,8 @@ class AlarmUtil {
       Notification notification = mBuilder.build();
 
       Log.e(TAG, "notification done");
+      FileLogger.d(mContext, "SEND NOTIFICATION\n" + alarm.toString());
+
       mNotificationManager.notify(notificationID, notification);
     } catch (Exception e) {
       Log.e(TAG, "failed to send notification", e);

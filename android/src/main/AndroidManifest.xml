@@ -1,5 +1,128 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.emekalites.react.alarm.notification">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.biogen">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.SET_ALARM" />
+
+    <permission
+            android:name="${applicationId}.permission.C2D_MESSAGE"
+            android:protectionLevel="signature" />
+
+    <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE" />
+
+    <application
+        android:name=".MainApplication"
+        android:allowBackup="false"
+        android:label="@string/app_name"
+        android:icon="${appIcon}"
+        android:theme="@style/AppTheme"
+        android:largeHeap="true"
+        android:usesCleartextTraffic="true"
+        tools:replace="android:allowBackup, android:appComponentFactory"
+        android:appComponentFactory="androidx">
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/default_notification_channel_id" />
+
+        <service android:name="io.invertase.firebase.messaging.RNFirebaseBackgroundMessagingService" />
+        <service android:name="io.invertase.firebase.messaging.RNFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+            android:windowSoftInputMode="adjustResize"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="cleo" />
+                <data android:scheme="aby" />
+            </intent-filter>
+            <!-- <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:host="${dynamicDomain}" android:scheme="http"/>
+                <data android:host="${dynamicDomain}" android:scheme="https"/>
+            </intent-filter> -->
+        </activity>
+
+        <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
+
+        <receiver android:name="com.appsflyer.SingleInstallBroadcastReceiver" android:exported="true">
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name="io.invertase.firebase.notifications.RNFirebaseNotificationReceiver"/>
+        <receiver android:enabled="true" android:exported="true"  android:name="io.invertase.firebase.notifications.RNFirebaseNotificationsRebootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
+                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name="com.emekalites.react.alarm.notification.AlarmReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="ACTION_DISMISS" />
+                <action android:name="ACTION_SNOOZE" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name="com.emekalites.react.alarm.notification.AlarmDismissReceiver"
+            android:enabled="true"
+            android:exported="true" />
+
+      <receiver
+        android:name="com.emekalites.react.alarm.notification.AlarmBootReceiver"
+        android:directBootAware="true"
+        android:enabled="false"
+        android:exported="true">
+        <intent-filter>
+          <action android:name="android.intent.action.BOOT_COMPLETED" />
+          <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+          <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
+          <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+        </intent-filter>
+      </receiver>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+        </provider>
+    </application>
+
 </manifest>
