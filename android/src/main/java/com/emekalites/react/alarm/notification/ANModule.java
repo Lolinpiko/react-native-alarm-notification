@@ -20,10 +20,7 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Locale;
 
 public class ANModule extends ReactContextBaseJavaModule {
   private final static String TAG = ANModule.class.getCanonicalName();
@@ -79,6 +76,7 @@ public class ANModule extends ReactContextBaseJavaModule {
 
     String datetime = bundle.getString("fire_date");
     if (datetime == null || datetime.equals("")) {
+      FileLogger.e(mReactContext, "failed to schedule notification because fire date is missing");
       Log.e(TAG, "failed to schedule notification because fire date is missing");
       return;
     }
@@ -92,9 +90,11 @@ public class ANModule extends ReactContextBaseJavaModule {
     try {
       int id = getAlarmDB().insert(alarm);
       alarm.setId(id);
+      FileLogger.d(mReactContext, "ANMODULE: SCHEDULE ALARM\n" + alarm.toString());
 
       alarmUtil.setAlarm(alarm);
     } catch (Exception e) {
+      FileLogger.e(mReactContext, "ANMODULE: SCHEDULE ALARM ERROR\n" + e.toString());
       e.printStackTrace();
     }
   }

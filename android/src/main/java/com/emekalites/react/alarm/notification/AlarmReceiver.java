@@ -20,6 +20,7 @@ public class AlarmReceiver extends BroadcastReceiver {
   @Override
   public void onReceive(Context context, Intent intent) {
     if (intent != null) {
+      FileLogger.d(context, "AlarmReceiver: ALARM RECEIVED\n");
       final AlarmDatabase alarmDB = AlarmDatabase.getInstance(context);
       AlarmUtil alarmUtil = new AlarmUtil((Application) context.getApplicationContext());
 
@@ -30,6 +31,8 @@ public class AlarmReceiver extends BroadcastReceiver {
 
           try {
             alarm = alarmDB.getAlarm(id);
+
+            FileLogger.d(context, "AlarmReceiver: HANDLE ALARM\n" + alarm.toString());
 
             alarmUtil.sendNotification(alarm);
 

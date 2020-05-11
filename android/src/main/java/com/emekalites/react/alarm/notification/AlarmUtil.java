@@ -1,5 +1,6 @@
 package com.emekalites.react.alarm.notification;
 
+import android.Manifest;
 import android.app.AlarmManager;
 import android.app.Application;
 import android.app.Notification;
@@ -18,6 +19,7 @@ import android.os.Environment;
 import java.io.FileOutputStream;
 import java.io.File;
 
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 
 import com.facebook.react.bridge.WritableMap;
@@ -27,6 +29,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Calendar;
@@ -101,11 +104,13 @@ class FileLogger {
     File file = new File(myDir, "cleo-logs.txt");
 
     try {
-      FileOutputStream out = new FileOutputStream(file);
-      out.write(data.getBytes());
+      FileOutputStream out = new FileOutputStream(file, true);
+      OutputStreamWriter outputStreamWriter = new OutputStreamWriter(out);
+      outputStreamWriter.append(data);
+      outputStreamWriter.flush();
+      outputStreamWriter.close();
       out.flush();
       out.close();
-
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -225,6 +230,7 @@ class AlarmUtil {
     try {
       Class intentClass = getMainActivityClass();
       if (intentClass == null) {
+        FileLogger.e(mContext, "No activity class found for the notification");
         Log.e(TAG, "No activity class found for the notification");
         return;
       }
@@ -242,6 +248,7 @@ class AlarmUtil {
       // message
       String message = alarm.getMessage();
       if (message == null || message.equals("")) {
+        FileLogger.e(mContext, "Cannot send to notification centre because there is no 'message' found");
         Log.d(TAG, "Cannot send to notification centre because there is no 'message' found");
         return;
       }
@@ -249,6 +256,7 @@ class AlarmUtil {
       // channel
       String channelID = alarm.getChannel();
       if (channelID == null || channelID.equals("")) {
+        FileLogger.e(mContext, "Cannot send to notification centre because there is no 'channel' found");
         Log.d(TAG, "Cannot send to notification centre because there is no 'channel' found");
         return;
       }
@@ -296,12 +304,10 @@ class AlarmUtil {
       // set tag and push notification
       Notification notification = mBuilder.build();
 
-      Log.e(TAG, "notification done");
-      FileLogger.d(mContext, "SEND NOTIFICATION\n" + alarm.toString());
-
       mNotificationManager.notify(notificationID, notification);
+      FileLogger.d(mContext, "SEND NOTIFICATION\n" + alarm.toString());
     } catch (Exception e) {
-      Log.e(TAG, "failed to send notification", e);
+      FileLogger.e(mContext, "FAILED TO SEND NOTIFICATION\n" + alarm.toString());
     }
   }
 
