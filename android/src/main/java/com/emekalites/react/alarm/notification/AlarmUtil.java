@@ -29,7 +29,6 @@ import org.json.JSONObject;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Calendar;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 import java.util.Date;
@@ -42,7 +41,7 @@ class FileLogger {
   private static String getTime() {
     SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy hh:mm:ss");
     dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-    Date today = Calendar.getInstance().getTime();
+    Date today = new Date();
     return dateFormat.format(today);
   }
 
@@ -304,7 +303,7 @@ class AlarmUtil {
       mNotificationManager.notify(notificationID, notification);
       FileLogger.d(mContext, "SEND NOTIFICATION\n" + alarm.toString());
     } catch (Exception e) {
-      FileLogger.e(mContext, "FAILED TO SEND NOTIFICATION\n" + alarm.toString());
+      FileLogger.e(mContext, "FAILED TO SEND NOTIFICATION\n" + alarm.toString() + "\n\n" + e.getLocalizedMessage());
     }
   }
 
