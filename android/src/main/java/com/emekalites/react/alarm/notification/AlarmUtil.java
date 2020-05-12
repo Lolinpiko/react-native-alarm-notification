@@ -39,7 +39,7 @@ class FileLogger {
   private static String directory = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/Debug/";
 
   private static String getTime() {
-    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy hh:mm:ss");
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy hh:mm:ss", Locale.getDefault());
     dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
     Date today = new Date();
     return dateFormat.format(today);
