@@ -1,6 +1,5 @@
 package com.emekalites.react.alarm.notification;
 
-import android.Manifest;
 import android.app.AlarmManager;
 import android.app.Application;
 import android.app.Notification;
@@ -19,7 +18,6 @@ import android.os.Environment;
 import java.io.FileOutputStream;
 import java.io.File;
 
-import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 
 import com.facebook.react.bridge.WritableMap;
@@ -28,7 +26,6 @@ import com.facebook.react.bridge.WritableNativeMap;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
