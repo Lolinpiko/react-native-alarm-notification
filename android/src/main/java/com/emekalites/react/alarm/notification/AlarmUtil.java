@@ -265,9 +265,9 @@ class AlarmUtil {
       int smallIconResId;
       String smallIcon = alarm.getSmallIcon();
       if (smallIcon != null && !smallIcon.equals("")) {
-        smallIconResId = res.getIdentifier(smallIcon, "mipmap", packageName);
+        smallIconResId = res.getIdentifier(smallIcon, "drawable", packageName);
       } else {
-        smallIconResId = res.getIdentifier("ic_launcher", "mipmap", packageName);
+        smallIconResId = res.getIdentifier("ic_launcher", "drawable", packageName);
       }
 
       Intent intent = new Intent(mContext, intentClass);
