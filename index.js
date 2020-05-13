@@ -17,8 +17,8 @@ ReactNativeAN.deleteAlarm = (alarm_id) => {
 	RNAlarmNotification.deleteAlarm(alarm_id);
 };
 
-ReactNativeAN.stopAlarmSound = () => {
-	return RNAlarmNotification.stopAlarm();
+ReactNativeAN.deleteAllAlarms = () => {
+	RNAlarmNotification.deleteAllAlarms();
 };
 
 ReactNativeAN.sendNotification = (details) => {

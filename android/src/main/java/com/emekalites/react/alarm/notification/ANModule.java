@@ -105,8 +105,12 @@ public class ANModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void stopAlarm() {
+  public void deleteAllAlarms() {
+    ArrayList<AlarmModel> alarms = alarmUtil.getAlarms();
 
+    for (AlarmModel alarm : alarms) {
+      alarmUtil.cancelAlarm(alarm);
+    }
   }
 
   @ReactMethod
