@@ -139,10 +139,11 @@ public class ANModule extends ReactContextBaseJavaModule {
     if (bundle == null) {
       return null;
     }
-    StringBuilder string = new StringBuilder();
-    for (String key : bundle.keySet()) {
-      string.append(key).append("==>").append(bundle.get(key)).append(";;");
+    try {
+      return BundleJSONConverter.convertToJSON(bundle).toString();
+    } catch (Exception e) {
+      FileLogger.e(mReactContext, "ANMODULE ERROR: Convert Bundle To String \n" + e.toString());
+      return null;
     }
-    return string.toString();
   }
 }

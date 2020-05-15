@@ -271,17 +271,15 @@ class AlarmUtil {
       }
 
       Intent intent = new Intent(mContext, intentClass);
-      intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
       Bundle bundle = new Bundle();
       if (alarm.getData() != null && !alarm.getData().equals("")) {
-        String[] datum = alarm.getData().split(";;");
-        for (String item : datum) {
-          String[] data = item.split("==>");
-          bundle.putString(data[0], data[1]);
-        }
+        try {
+          JSONObject data = new JSONObject(alarm.getData());
+          intent.putExtras(BundleJSONConverter.convertToBundle(data));
+        } catch (Exception e) {
 
-        intent.putExtras(bundle);
+        }
       }
 
       PendingIntent pendingIntent = PendingIntent.getActivity(mContext, notificationID, intent,
